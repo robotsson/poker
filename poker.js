@@ -18,6 +18,12 @@ let getRandomSet = function( nbr, max, uniq )
     return nbrs;
 };
 
+function compare()
+{
+    
+}
+
+
 function hand(cards)
 {
 
