@@ -1,9 +1,13 @@
 import deck from "./deck.js";
 
+
+
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
+// used to return a set of 5 unique numbers
+// between 0 and 51
 let getRandomSet = function( nbr, max, uniq )
 {
     let nbrs = uniq ? new Set() : [];
@@ -18,15 +22,24 @@ let getRandomSet = function( nbr, max, uniq )
     return nbrs;
 };
 
-function compare()
+// lookup table to decide if a card is higher than another
+const rank = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
+
+function compare(a, b)
 {
-    
+    // deck[a] and deck[b] contains
+    // a string made up of rank followed by suit (S,C,H,D) 
+    // removing suit to compare it by looking up the position
+    // of the card's rank in the rank array 
+    let ar = deck[a].slice( 0, -1 );
+    let br = deck[b].slice( 0, -1 );
+
+    return rank.indexOf(ar)-rank.indexOf(br);
 }
 
 
 function hand(cards)
 {
-
     /*   
     Algorithm
 
@@ -76,11 +89,21 @@ hand(cards);
 console.log(cards);
 
 let result = "<h1>poker hello.</h1>";
-result += '<img src="cards/big/' + deck[ cards[0] ] + '"/>';
-result += '<img src="cards/big/' + deck[ cards[1] ] + '"/>';
-result += '<img src="cards/big/' + deck[ cards[2] ] + '"/>';
-result += '<img src="cards/big/' + deck[ cards[3] ] + '"/>';
-result += '<img src="cards/big/' + deck[ cards[4] ] + '"/>';
+
+// result += '<img src="cards/' + deck[ cards[0] ] + '"/>';
+// result += '<img src="cards/' + deck[ cards[1] ] + '"/>';
+// result += '<img src="cards/' + deck[ cards[2] ] + '"/>';
+// result += '<img src="cards/' + deck[ cards[3] ] + '"/>';
+// result += '<img src="cards/' + deck[ cards[4] ] + '"/>';
+// result += '</p>';
+
+let sorted = cards.sort(compare);
+
+result += '<img src="cards/' + deck[ sorted[0] ] + '"/>';
+result += '<img src="cards/' + deck[ sorted[1] ] + '"/>';
+result += '<img src="cards/' + deck[ sorted[2] ] + '"/>';
+result += '<img src="cards/' + deck[ sorted[3] ] + '"/>';
+result += '<img src="cards/' + deck[ sorted[4] ] + '"/>';
 
 console.log(result);
 
