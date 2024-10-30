@@ -1,0 +1,21 @@
+ magick 10C.png -filter point -resize 400% big/10C.png
+
+
+
+magick 1S.png -filter point -resize 400% big/1S
+magick 2S.png -filter point -resize 400% big/2S
+magick 3S.png -filter point -resize 400% big/3S
+magick 4S.png -filter point -resize 400% big/4S
+magick 5S.png -filter point -resize 400% big/5S
+magick 6S.png -filter point -resize 400% big/6S
+magick 7S.png -filter point -resize 400% big/7S
+
+magick 8S.png -filter point -resize 400% big/8S
+magick 9S.png -filter point -resize 400% big/9S
+magick 10S.png -filter point -resize 400% big/10S
+magick 11S.png -filter point -resize 400% big/11S
+magick 12S.png -filter point -resize 400% big/12S
+magick 13S.png -filter point -resize 400% big/13S
+
+
+
