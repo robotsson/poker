@@ -11,36 +11,87 @@ function getRandomInt(max) {
 let getRandomSet = function( nbr, max, uniq )
 {
     let nbrs = uniq ? new Set() : [];
-    let add = e => uniq ? nbrs.add(e) : nbrs.push(e);
+    let add = e => uniq ? nbrs.add( e ) : nbrs.push( e );
     let l = () => uniq ? nbrs.size : nbrs.length;
 
     while( l() < nbr )
     {
-        add( getRandomInt(max) );
+        add( getRandomInt( max ) );
     }
 
     return nbrs;
 };
 
+/* remove the last character in card string (i.e "5S", "10C" .. ) to get rank */
+function getrank( card )
+{
+  return deck[card].slice( 0, -1 );
+}
+
 /* lookup table used to decide if a card is higher than another */
 const rank = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
 
 /* compare two card deck entries */
-function compare(a, b)
+function compare( a, b  )
 {
     // deck[a] and deck[b] contains
     // a string made up of rank followed by suit (S,C,H,D) 
     // removing suit to compare it by looking up the position
     // of the card's rank in the rank array 
-    let ar = deck[a].slice( 0, -1 );
-    let br = deck[b].slice( 0, -1 );
+       let ar = getrank(a ); // deck[a].slice( 0, -1 );
+       let br = getrank( b); // deck[b].slice( 0, -1 );
 
     return rank.indexOf(ar)-rank.indexOf(br);
 }
 
-
-function findhands(cards)
+function getsuit( card )
 {
+    // last character in string
+    return deck[card].at(-1);
+}
+
+
+function getsortedhistogram( hand )
+{
+    let cardranks = hand.map( getrank );
+    //console.log( cardranks );
+    let histogram = new Map();
+
+    for( let i = 0; i < cardranks.length; i++ )
+    {
+        let currentcard = cardranks[i];
+
+        if( ! histogram.has( currentcard ) )
+        { 
+            let samecards = cardranks.filter( (x) => currentcard === x );
+            histogram.set( cardranks[i], samecards.length );
+        }
+    }
+    
+
+
+    // Converts histogram map to array of (key,value)-pairs using spread, 
+    // then sort the pairs according to the value, and creates a new map 
+    // out of this array
+    let sortedhistogram = new Map([...histogram]
+                            .sort( ( [ , a_v], [ , b_v] ) => b_v - a_v ));
+      
+    return( sortedhistogram );
+}
+
+
+
+function isflush( hand )
+{
+    let a = hand.map( getsuit );
+    // console.log(a);
+    return ( a[0] == a[1] ) && ( a[1] == a[2] ) 
+        && ( a[2] == a[3] ) && ( a[3] == a[4] );
+}
+
+function findhands( hand )
+{
+    // console.log("findhands");
     /*   
     Algorithm
 
@@ -80,14 +131,19 @@ function findhands(cards)
     
     If we haven't matched the hand by now, it's High Card.
     */
+    let histogram = getsortedhistogram( hand );
+
+    console.table( [...histogram] );
+
+    let flush = isflush( hand );
 }
 
-let hand = Array.from( getRandomSet(5, 52, true));
+let hand = Array.from( getRandomSet( 5, 52, true ) );
 
-findhands(hand);
+findhands( hand );
 
 // console.log("card: "+card);
-console.log(hand);
+// console.log( hand );
 
 let result = "<h1>poker hello.</h1>";
 
@@ -98,19 +154,35 @@ let result = "<h1>poker hello.</h1>";
 // result += '<img src="cards/' + deck[ cards[4] ] + '"/>';
 // result += '</p>';
 
+let fusk = [4,8,12,16,0]; // AC,2C,3C,4C,5C
+
 let sorted = hand.sort(compare);
+
+// sorted = [0,4,8,12,16];
 
 result += '<img src="cards/' + deck[ sorted[0] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[1] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[2] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[3] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[4] ] + '"/>';
+result += '</p>';
 
-console.log(result);
+if( isflush( hand ) )
+{
+    result += '<h1 class="result">~ flush !</h1>';
+}
+else
+{
+    result +=".......not flush";
+}
+
+// console.log( "isfl2: " + isflush( fusk ));
+
+// console.log(result);
 
 document.getElementById("main_body").innerHTML = result;
 
-console.log(cards);
+// console.log( hand );
 
 // console.log( cards );
 
