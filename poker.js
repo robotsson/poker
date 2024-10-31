@@ -136,7 +136,8 @@ function findhands( hand )
 {
     // console.log("findhands");
     /*   
-    Algorithm
+    Algorithm found here:
+    https://nsayer.blogspot.com/2007/07/algorithm-for-evaluating-poker-hands.html
 
     First take a histogram of the card ranks. 
     That is, for each rank in the hand, count how often it appears. 
@@ -264,7 +265,6 @@ if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
 // console.log( hand );
 
 let result = "<h1>&nbsp;-- poker hello.</h1> <h3>&emsp; press reload for new hand.</h3><br>";
-
 // let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
 // sorted = [0,4,8,12,16];
 
@@ -275,11 +275,13 @@ result += '<img src="cards/' + deck[ sortedhand[3] ] + '"/>';
 result += '<img src="cards/' + deck[ sortedhand[4] ] + '"/>';
 result += '</p>';
 
+result += '<h2>&nbsp;&nbsp;';
 if( handstr !== "")
 {
-    result += '<h2>&nbsp;&nbsp;----------- '+handstr+' -----------</h2>'
+    result += '----------- '+handstr+' -----------';
+    
 }
-
+result += '</h2>';
 // console.log( "isfl2: " + isflush( fusk ));
 
 // console.log(result);
