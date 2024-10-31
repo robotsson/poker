@@ -137,28 +137,48 @@ function findhands( hand )
 
 
     console.log("hl: "+histogram.size);
-    
+    let values = [...histogram.values()];
+
     if( histogram.size === 2 )
     {  
-        let values = [...histogram.values()];
-
         if( values[0] === 4 && values[1] === 1 )
         {
-            return "FOUR OF A KIND";
+            return "FOUR OF A KIND!";
         }
 
         if( values[0] === 3 && values[1] === 2 )
         {
-            return "FULL HOUSE";
+            return "FULL HOUSE!";
         }
        
        //console.log(kv);
     }
+    else if( histogram.size === 3 )
+    {
+        if( values[0] === 3 && values[1] === 1 && values[2] === 1 )
+        {
+            return "THREE OF A KIND!";
+        }
+        
+        if( values[0] === 2 && values[1] === 2 && values[2] === 1 )
+        {
+            return "TWO PAIRS!";
+        }
+    } 
+    else if( histogram.size === 4 )
+    {
+        if( values[0] === 2 && values[1] === 1 && values[2] === 1 && values[3] === 1 )
+        {
+            return "PAIR!";
+        }
+    }
 
+    if( isflush( hand ) ) 
+    {
+        return "FLUSH!";
+    }
 
-    let flush = isflush( hand );
-
-    return "HIGH CARD";
+    return "";
 }
 
 let hand = Array.from( getRandomSet( 5, 52, true ) );
@@ -191,7 +211,10 @@ result += '<img src="cards/' + deck[ sorted[3] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[4] ] + '"/>';
 result += '</p>';
 
-result += '<h2>&nbsp;&nbsp;----------- '+handstr+' -----------</h2>'
+if( handstr !== "")
+{
+    result += '<h2>&nbsp;&nbsp;----------- '+handstr+' -----------</h2>'
+}
 
 // console.log( "isfl2: " + isflush( fusk ));
 
