@@ -282,13 +282,10 @@ if( handstr !== "")
     
 }
 result += '</h2>';
-// console.log( "isfl2: " + isflush( fusk ));
+
 
 // console.log(result);
 
 document.getElementById("main_body").innerHTML = result;
 
-// console.log( hand );
-
-// console.log( cards );
 
