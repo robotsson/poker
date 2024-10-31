@@ -38,8 +38,8 @@ function compare( a, b  )
     // a string made up of rank followed by suit (S,C,H,D) 
     // removing suit to compare it by looking up the position
     // of the card's rank in the rank array 
-       let ar = getrank(a ); // deck[a].slice( 0, -1 );
-       let br = getrank( b); // deck[b].slice( 0, -1 );
+    let ar = getrank(a ); // deck[a].slice( 0, -1 );
+    let br = getrank( b); // deck[b].slice( 0, -1 );
 
     return rank.indexOf(ar)-rank.indexOf(br);
 }
@@ -126,8 +126,8 @@ function findhands( hand )
     If the hand is a straight and a flush, it's a straight-flush. 
     Otherwise if it's one or the other, you can return that.
 
-    Tillägg: AKQJ10 royal straight
-    Tillägg: AKQJ10 i samma färg royal straight flush
+    Tillägg: AKQJ10 royal straight?
+    AKQJ10 royal flush
     
     If we haven't matched the hand by now, it's High Card.
     */
@@ -135,28 +135,52 @@ function findhands( hand )
 
     console.table( [...histogram] );
 
+
+    console.log("hl: "+histogram.size);
+    
+    if( histogram.size === 2 )
+    {  
+        let values = [...histogram.values()];
+
+        if( values[0] === 4 && values[1] === 1 )
+        {
+            return "FOUR OF A KIND";
+        }
+
+        if( values[0] === 3 && values[1] === 2 )
+        {
+            return "FULL HOUSE";
+        }
+       
+       //console.log(kv);
+    }
+
+
     let flush = isflush( hand );
+
+    return "HIGH CARD";
 }
 
 let hand = Array.from( getRandomSet( 5, 52, true ) );
 
-findhands( hand );
+let fusk1 = [0,1,2,3,4];
+let fusk2 = [0,1,2,4,5];
+
+// hand = fusk2;
+
+let handstr = findhands( hand );
 
 // console.log("card: "+card);
 // console.log( hand );
 
-let result = "<h1>poker hello.</h1>";
+let result = "<h1>&nbsp;-- poker hello.</h1>";
 
-// result += '<img src="cards/' + deck[ cards[0] ] + '"/>';
-// result += '<img src="cards/' + deck[ cards[1] ] + '"/>';
-// result += '<img src="cards/' + deck[ cards[2] ] + '"/>';
-// result += '<img src="cards/' + deck[ cards[3] ] + '"/>';
-// result += '<img src="cards/' + deck[ cards[4] ] + '"/>';
-// result += '</p>';
 
-let fusk = [4,8,12,16,0]; // AC,2C,3C,4C,5C
+// let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
+
 
 let sorted = hand.sort(compare);
+
 
 // sorted = [0,4,8,12,16];
 
@@ -167,14 +191,7 @@ result += '<img src="cards/' + deck[ sorted[3] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[4] ] + '"/>';
 result += '</p>';
 
-if( isflush( hand ) )
-{
-    result += '<h1 class="result">~ flush !</h1>';
-}
-else
-{
-    result +=".......not flush";
-}
+result += '<h2>&nbsp;&nbsp;----------- '+handstr+' -----------</h2>'
 
 // console.log( "isfl2: " + isflush( fusk ));
 
