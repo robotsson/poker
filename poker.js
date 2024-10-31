@@ -1,13 +1,13 @@
 import deck from "./deck.js";
 
-
-
 function getRandomInt(max) {
     return Math.floor(Math.random() * max);
 }
 
-// used to return a set of 5 unique numbers
-// between 0 and 51
+/*
+   used to return a set of 5 unique numbers
+   between 0 and 51
+*/
 let getRandomSet = function( nbr, max, uniq )
 {
     let nbrs = uniq ? new Set() : [];
@@ -22,9 +22,10 @@ let getRandomSet = function( nbr, max, uniq )
     return nbrs;
 };
 
-// lookup table to decide if a card is higher than another
+/* lookup table used to decide if a card is higher than another */
 const rank = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
 
+/* compare two card deck entries */
 function compare(a, b)
 {
     // deck[a] and deck[b] contains
@@ -38,7 +39,7 @@ function compare(a, b)
 }
 
 
-function hand(cards)
+function findhands(cards)
 {
     /*   
     Algorithm
@@ -81,12 +82,12 @@ function hand(cards)
     */
 }
 
-let cards = Array.from( getRandomSet(5, 52, true));
+let hand = Array.from( getRandomSet(5, 52, true));
 
-hand(cards);
+findhands(hand);
 
 // console.log("card: "+card);
-console.log(cards);
+console.log(hand);
 
 let result = "<h1>poker hello.</h1>";
 
@@ -97,7 +98,7 @@ let result = "<h1>poker hello.</h1>";
 // result += '<img src="cards/' + deck[ cards[4] ] + '"/>';
 // result += '</p>';
 
-let sorted = cards.sort(compare);
+let sorted = hand.sort(compare);
 
 result += '<img src="cards/' + deck[ sorted[0] ] + '"/>';
 result += '<img src="cards/' + deck[ sorted[1] ] + '"/>';
