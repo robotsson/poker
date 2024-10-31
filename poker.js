@@ -31,6 +31,7 @@ function getrank( card )
 /* lookup table used to decide if a card is higher than another */
 const rank = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
 
+
 /* compare two card deck entries */
 function compare( a, b  )
 {
@@ -79,9 +80,35 @@ function getsortedhistogram( hand )
     return( sortedhistogram );
 }
 
+function is_straight( hand )
+{
+    let first = getrank( hand[0] );
+    let last = getrank( hand[4] );
+    
+    let firstint = 13 -rank.indexOf(first);
+    let lastint = 13 - rank.indexOf(last);
 
+    if( ( firstint - lastint ) === 4 )
+    {
+        return true;
+    }
+    else if( first === "A" )
+    {
+        // Check for "wheel"
+        let second = getrank( hand[1] );
+        let secondint = 13 - rank.indexOf(second);
 
-function isflush( hand )
+        // console.log( "wheel: "+secondint +" "+ lastint )
+
+        if( ( secondint - lastint ) === 3 )
+        {
+            return true;
+        }
+    } 
+
+}
+
+function is_flush( hand )
 {
     let a = hand.map( getsuit );
     // console.log(a);
@@ -126,8 +153,6 @@ function findhands( hand )
     If the hand is a straight and a flush, it's a straight-flush. 
     Otherwise if it's one or the other, you can return that.
 
-    Tillägg: AKQJ10 royal straight?
-    AKQJ10 royal flush
     
     If we haven't matched the hand by now, it's High Card.
     */
@@ -138,6 +163,8 @@ function findhands( hand )
 
     console.log("hl: "+histogram.size);
     let values = [...histogram.values()];
+
+    let flush =  is_flush( hand );
 
     if( histogram.size === 2 )
     {  
@@ -172,8 +199,19 @@ function findhands( hand )
             return "PAIR!";
         }
     }
-
-    if( isflush( hand ) ) 
+    else if( is_straight( hand ) )
+    {
+        // "Broadway"(AKQJ10) & "Wheel" (A5432)
+        if( flush && getrank(hand[0]) === "A" ) 
+        {
+            if( getrank(hand[1]) === "K" )
+            {
+                return "ROYAL FLUSH!";
+            }
+        }
+        return flush ? "STRAIGHT FLUSH!" : "STRAIGHT!";
+    }
+    else if( flush ) 
     {
         return "FLUSH!";
     }
@@ -185,30 +223,40 @@ let hand = Array.from( getRandomSet( 5, 52, true ) );
 
 let fusk1 = [0,1,2,3,4];
 let fusk2 = [0,1,2,4,5];
+let fusk3 = [1,4,8,12,16];
 
-// hand = fusk2;
+// hand = fusk3;
+let sortedhand = hand.sort(compare);
 
-let handstr = findhands( hand );
+let handstr = findhands( sortedhand );
+
+// special case for A5432, "wheel", looks nicer to put 
+// A last
+if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+{
+    //console.log("test for wheel");
+    if( getrank( sortedhand[1] ) === "5" ) 
+    {
+        // re-sort, p
+        //console.log("re-sort");
+        let shifted = sortedhand.shift();
+        sortedhand.push(shifted);
+    }
+}
 
 // console.log("card: "+card);
 // console.log( hand );
 
 let result = "<h1>&nbsp;-- poker hello.</h1>";
 
-
 // let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
-
-
-let sorted = hand.sort(compare);
-
-
 // sorted = [0,4,8,12,16];
 
-result += '<img src="cards/' + deck[ sorted[0] ] + '"/>';
-result += '<img src="cards/' + deck[ sorted[1] ] + '"/>';
-result += '<img src="cards/' + deck[ sorted[2] ] + '"/>';
-result += '<img src="cards/' + deck[ sorted[3] ] + '"/>';
-result += '<img src="cards/' + deck[ sorted[4] ] + '"/>';
+result += '<img src="cards/' + deck[ sortedhand[0] ] + '"/>';
+result += '<img src="cards/' + deck[ sortedhand[1] ] + '"/>';
+result += '<img src="cards/' + deck[ sortedhand[2] ] + '"/>';
+result += '<img src="cards/' + deck[ sortedhand[3] ] + '"/>';
+result += '<img src="cards/' + deck[ sortedhand[4] ] + '"/>';
 result += '</p>';
 
 if( handstr !== "")
