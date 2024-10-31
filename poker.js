@@ -247,7 +247,7 @@ if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
 // console.log("card: "+card);
 // console.log( hand );
 
-let result = "<h1>&nbsp;-- poker hello.</h1>";
+let result = "<h1>&nbsp;-- poker hello.</h1> <h3>&emsp; press reload for new hand.</h3><br>";
 
 // let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
 // sorted = [0,4,8,12,16];
