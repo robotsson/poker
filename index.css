@@ -10,7 +10,7 @@
 
     a:link { color: black; text-decoration: none }
     a:visited { color: darkblue; }
-    a:hover { color: lightgray; text-decoration: underline }
+    a:hover { color: white; text-decoration: underline }
     a:active { color: hotpink; transition-duration: 0.2s;}
 
 
@@ -36,7 +36,7 @@
     }
 
     .linkbox {
-      background-color: rgba(235, 155, 180, 1.0);
+      background-color: rgba(255, 125, 180, 1.0);
       width: fit-content;
       position: fixed;
       top: 0;
