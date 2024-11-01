@@ -1,0 +1,58 @@
+@import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
+    
+    html,body { font-family: "Pixelify Sans", sans-serif; font-weight: 300; }
+    h1 { font-family: "Pixelify Sans", sans-serif; font-weight: 500; font-size: 52px; text-shadow: 2px 2px red;}
+    h2 { font-family: "Pixelify Sans", sans-serif; font-weight: 500; font-size: 32px; text-shadow: 2px 2px black;}
+    h3 { font-family: "Pixelify Sans", sans-serif; font-weight: 400; font-size: 24px; text-shadow: 2px 2px black;}
+    h4 { font-family: "Pixelify Sans", sans-serif; font-weight: 400; font-size: 18px; }
+    h5 { font-family: "Pixelify Sans", sans-serif; font-weight: 200; }
+    h5 { font-family: "Pixelify Sans", sans-serif; font-weight: 200; }
+
+    a:link { color: black; text-decoration: none }
+    a:visited { color: blue; }
+    a:hover { color: lightgray; text-decoration: underline }
+    a:active { color: hotpink; }
+
+
+    body {
+      color: rgba(255,255,255,0.99);  
+      text-align: center;
+    }
+
+    img { 
+      margin-left: 8px;
+      margin-right: 8px;  
+      box-shadow: 0px 0px 128px 16px rgba(45,255,196,0.3);
+      transition-duration: 0.2s;
+    }
+    img:hover {
+      /* filter: hue-rotate(90deg); */
+      filter: contrast(200%);
+      transform: translateY(-8px); 
+    }
+
+    .poker-table {
+      background-color: green;
+    }
+
+    .linkboxx {
+      background-color: hotpink;
+      width: fit-content;
+      /* margin-left: 25%;*/
+      padding-left: 5px;
+      padding-right: 5px;
+      padding-top: 2px;
+      padding-bottom: 2px;
+      border-radius: 5px;
+      transition-duration: 0.2s;
+      box-shadow: 2px 2px black;
+    }
+
+    .linkbox {
+      text-align: right;
+    }
+
+    .linkbox:hover {
+      filter: contrast(200%);
+    }
+

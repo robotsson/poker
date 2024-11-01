@@ -3,60 +3,16 @@
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width"/>
+    <link rel="stylesheet" href="index.css">
     <title>mini poker</title>
   <head>
-
-  <style>
-    @import url('https://fonts.googleapis.com/css2?family=Pixelify+Sans:wght@400..700&display=swap');
-    
-    html,body { font-family: "Pixelify Sans", sans-serif; font-weight: 300; }
-    h1 { font-family: "Pixelify Sans", sans-serif; font-weight: 500; font-size: 52px; text-shadow: 2px 2px red;}
-    h2 { font-family: "Pixelify Sans", sans-serif; font-weight: 500; font-size: 32px; text-shadow: 2px 2px black;}
-    h3 { font-family: "Pixelify Sans", sans-serif; font-weight: 400; font-size: 24px; text-shadow: 2px 2px black;}
-    h4 { font-family: "Pixelify Sans", sans-serif; font-weight: 400; font-size: 18px; }
-    h5 { font-family: "Pixelify Sans", sans-serif; font-weight: 200; }
-    h5 { font-family: "Pixelify Sans", sans-serif; font-weight: 200; }
-
-    a:link { color: lightgray; text-decoration: none }
-    a:visited { color: lightsteelblue; }
-    a:hover { color: white; text-decoration: underline }
-    a:active { color: gray; }
-
-
-    body {
-      background-color: darkgreen;
-      color: rgba(255,255,255,0.99);    
-    }
-
-    img { 
-      margin-left: 8px;
-      margin-right: 8px;  
-      box-shadow: 0px 0px 128px 16px rgba(45,255,196,0.3);
-      transition-duration: 0.2s;
-    }
-    img:hover {
-      /* filter: hue-rotate(90deg); */
-      filter: contrast(200%);
-      transform: translateY(-8px); 
-    }
-
-  </style>
   
-  <body class="crt" id="main_body">
+  <body class="poker-table" id="main_body">
 
-    <script src="poker.js"></script>
-    <!--
-    <script/>
-        function getRandomInt(max) {
-            return Math.floor(Math.random() * max);
-        }
-        
-        console.log( getRandomInt(52) );
-        let result = "<h1>hello</h1>";
-        document.getElementById("main_body").innerHTML = result;
-    </script>
-    -->
+    <script src="poker.js"></script> 
 
-    <h4>&nbsp;&nbsp;&nbsp;<a href="http://github.com/robotsson/poker">github repo</a>
+    <h4 class="linkbox">
+      <a href="http://github.com/robotsson/poker">github repo</a>
+    </h4>
   </body>
 </head>

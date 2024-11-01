@@ -264,7 +264,10 @@ if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
 // console.log("card: "+card);
 // console.log( hand );
 
-let result = "<h1>&nbsp;-- poker hello.</h1> <h3>&emsp; press reload for new hand.</h3><br>";
+let result = '';
+
+result += '<h1>&nbsp;-- poker hello. --</h1>';
+result += '<h3>&nbsp; press reload for new hand.</h3><br>';
 // let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
 // sorted = [0,4,8,12,16];
 
@@ -275,14 +278,16 @@ result += '<img src="cards/' + deck[ sortedhand[3] ] + '"/>';
 result += '<img src="cards/' + deck[ sortedhand[4] ] + '"/>';
 result += '</p>';
 
-result += '<h2>&nbsp;&nbsp;';
+result += '<h2>';
 if( handstr !== "")
 {
-    result += '----------- '+handstr+' -----------';
-    
+    result += '--- '+handstr+' ---';   
+}
+else
+{
+    result += '&nbsp;'
 }
 result += '</h2>';
-
 
 // console.log(result);
 
