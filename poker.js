@@ -281,7 +281,7 @@ result += '</p>';
 result += '<h2>';
 if( handstr !== "")
 {
-    result += '--- '+handstr+' ---';   
+    result += '-- '+handstr+' --';   
 }
 else
 {
