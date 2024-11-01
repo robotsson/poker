@@ -6,7 +6,7 @@ Coded in JavaScript in the style of old-school C for my own amusement.
 
 Cards by The wild kin @ itch.io.
 
-Using hand detection algorithm described on ["Nick's blog"](https://nsayer.blogspot.com/2007/07/algorithm-for-evaluating-poker-hands.html).
+Using hand detection algorithm described in natural language on ["Nick's blog"](https://nsayer.blogspot.com/2007/07/algorithm-for-evaluating-poker-hands.html).
 
 
 ### TODO
