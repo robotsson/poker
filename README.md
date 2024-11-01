@@ -1,4 +1,6 @@
-### Video Poker
+# Video Poker
+
+## Project description
 
 My little poker "game".
 
