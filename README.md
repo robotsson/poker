@@ -15,4 +15,4 @@ Using hand detection algorithm described in natural language on ["Nick's blog"](
 
 - Make it a real game with betting, folding, discard, etc. I think I should make it a React project before moving on to that.
 
--Sound effects for winning hands, game page load, game start.
+- Sound effects for winning hands, game page load, game start.
