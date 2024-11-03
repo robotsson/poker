@@ -4,7 +4,9 @@
 
 My little poker "game".
 
-Coded in JavaScript in the style of old-school C for my own amusement.
+[Demo on github.io](https://robotsson.github.io/poker/)
+
+Developed in JavaScript.
 
 Cards by The wild kin @ itch.io.
 
