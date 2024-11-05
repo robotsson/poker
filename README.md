@@ -6,7 +6,7 @@ My little poker "game".
 
 [Demo on github.io](https://robotsson.github.io/poker/)
 
-Developed in JavaScript.
+Developed in JavaScript, HTML and CSS.
 
 Cards by The wild kin @ itch.io.
 
