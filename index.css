@@ -106,6 +106,7 @@ button:hover
 {
     filter: contrast(200%);
     background-color: purple;
+    transform: translateY(4px);
 }
 
 .poker-table {
