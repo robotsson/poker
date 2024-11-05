@@ -25,6 +25,17 @@ h3 {
     font-weight: 400;
     font-size: 24px;
     text-shadow: 2px 2px black;
+    animation: bounce 0.5s  infinite alternate;
+}
+
+@keyframes bounce {
+    0% {
+        transform: translateY(0);
+    }
+    100% {
+        transform: translateY(-10px);
+    }
+
 }
 
 h4 {
@@ -74,6 +85,11 @@ img {
     margin-right: 8px;
     box-shadow: 0px 0px 128px 16px rgba(45, 255, 196, 0.3);
     transition-duration: 0.2s;
+}
+
+img.folded
+{
+    opacity: 0.5;
 }
 
 img:hover {

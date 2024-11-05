@@ -15,7 +15,13 @@ const deck = [
     "KC","KD","KH","KS"
 ];
 
-
+// game state Object
+// 0 = no hands dealt, 1 = one hand, etc.
+let gameState = { 
+    "gameRound": 0, 
+    "savedcards": [],
+    "remainingcards": []
+}
 
 function getRandomInt( max ) {
     return Math.floor(Math.random() * max);
@@ -265,12 +271,14 @@ function showHand(sortedhand)
     document.getElementById("card2").setAttribute("src", "cards/" + deck[ sortedhand[2] ]);
     document.getElementById("card3").setAttribute("src", "cards/" + deck[ sortedhand[3] ]);
     document.getElementById("card4").setAttribute("src", "cards/" + deck[ sortedhand[4] ]);
+
+    setupClickHandlers();
 }
 
 function showResult(handstr)
 {
     result = '';
-    result += '<h2>';
+    result += '<h2 id="handstr">';
     if( handstr !== "")
     {
         result += '-- '+handstr+' --';   
@@ -281,29 +289,38 @@ function showResult(handstr)
     }
     result += '</h2>';
 
-    document.getElementById("main_body").innerHTML += result;
+    document.getElementById("message").innerHTML = result;
 
 }
 
-/** MAIN CODE ENTRY POINT  */
-
-
-function Main()
-{
+function getSortedHand()
+{   
     let hand = Array.from( getRandomSet( 5, 52 ) );
 
     let fusk1 = [0,1,2,3,4];
     let fusk2 = [0,1,2,4,5];
     let fusk3 = [1,4,8,12,16];
 
-// hand = fusk3;
+    // hand = fusk3;
     let sortedhand = hand.sort(compare);
+
+    return sortedhand;
+}
+
+function showUserInfo(str)
+{
+    document.getElementById("userinfo").innerHTML = str; 
+}
+
+function FirstRound()
+{
+
+    let sortedhand = getSortedHand();
 
     let handstr = findhands( sortedhand );
 
-
-// special case for A5432, "wheel", looks nicer to put 
-// A last in the displayed hand
+    // special case for A5432, "wheel", looks nicer to put 
+    // A last in the displayed hand
     if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
     {
         //console.log("test for wheel");
@@ -316,7 +333,7 @@ function Main()
         }
     }
 
-    console.log("showhand");
+    // console.log("showhand");
     
     showHand(sortedhand);
 
@@ -325,40 +342,232 @@ function Main()
 
     showResult(handstr);
 
+    showUserInfo("Round 1: Click on cards you want to discard!");
+
+    console.log("end first deal");
+
+    return sortedhand;
+}  // End First Deal
+
+
+function filterOutFoldedCards( card, index )
+{
+    element = document.getElementById("card"+index);
+    if( element.getAttribute("class") === "folded")
+    {
+        return false;
+    }
+    return true;
+}
+
+function resetFoldedCards( )
+{
+    for( let i = 0; i < 5; i++ )
+    {
+        element = document.getElementById("card"+i);
+        element.removeAttribute("class");
+    }
+}
+
+function SecondRound(savedcards)
+{
+
+    gameState.remainingcards = createNewDeck( savedcards );
+    keptcards = savedcards.filter( filterOutFoldedCards );
+    resetFoldedCards();
+    console.log("Second round");
+    console.log(keptcards);
+
+    let newcards = Array.from( getRandomSet( 5-keptcards.length, gameState.remainingcards.length ) );
+    
+    // convert between the new array and old array of cards, indices in the full deck are used
+    let cardstrings = newcards.map( card => gameState.remainingcards[card] );
+    let newcardsconverted = cardstrings.map( cardstring => deck.indexOf( cardstring ));
+
+    let newhand = keptcards.concat( newcardsconverted );
+    let newsortedhand = newhand.sort(compare);
+
+    
+
+    showHand( newsortedhand );
+
+    let handstr = findhands( newsortedhand );
+
+    // special case for A5432, "wheel", looks nicer to put 
+    // A last in the displayed hand
+    if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+    {
+        //console.log("test for wheel");
+        if( getrank( newsortedhand[1] ) === "5" ) 
+        {
+        // re-sort, p
+        //console.log("re-sort");
+            let shifted = newsortedhand.shift();
+            newsortedhand.push(shifted);
+        }
+    }
+
+    showResult(handstr);
+
+    showUserInfo("Round 2: Click on cards you want to discard!");
+
+    console.log(cardstrings);
+
+    gameState.remainingcards = createNewDeck( newcards ); 
+    
+    return newsortedhand;
+    
+}
+
+
+function LastRound(savedcards)
+{
+
+    gameState.remainingcards = createNewDeck( savedcards );
+    keptcards = savedcards.filter( filterOutFoldedCards );
+    resetFoldedCards();
+    console.log("Second round");
+    console.log(keptcards);
+
+    let newcards = Array.from( getRandomSet( 5-keptcards.length, gameState.remainingcards.length ) );
+    
+    // convert between the new array and old array of cards, indices in the full deck are used
+    let cardstrings = newcards.map( card => gameState.remainingcards[card] );
+    let newcardsconverted = cardstrings.map( cardstring => deck.indexOf( cardstring ));
+
+    let newhand = keptcards.concat( newcardsconverted );
+    let newsortedhand = newhand.sort(compare);
+
+    
+
+    showHand( newsortedhand );
+
+    let handstr = findhands( newsortedhand );
+
+    // special case for A5432, "wheel", looks nicer to put 
+    // A last in the displayed hand
+    if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+    {
+        //console.log("test for wheel");
+        if( getrank( newsortedhand[1] ) === "5" ) 
+        {
+        // re-sort, p
+        //console.log("re-sort");
+            let shifted = newsortedhand.shift();
+            newsortedhand.push(shifted);
+        }
+    }
+
+    showResult(handstr);
+
+    showUserInfo("Last round, press fold to restart!");
+
+    console.log(cardstrings);
+
+    gameState.remainingcards = createNewDeck( newcards ); 
+    
+    return newsortedhand;
+    
+}
+
+
+
+
+function createNewDeck( sortedhand )
+{
     let remainingcards = [];
     deck.map( x => remainingcards.push(x) ); // deep copy
 
-    // create a deck with the dealed cards removed
-    remainingcards.splice( sortedhand[0], 1 );
-    remainingcards.splice( sortedhand[1], 1 );
-    remainingcards.splice( sortedhand[2], 1 );
-    remainingcards.splice( sortedhand[3], 1 );
-    remainingcards.splice( sortedhand[4], 1 );
+    // create a deck with the dealed cards removed'
+    for( let card in sortedhand )
+    {
+        remainingcards.splice( card, 1 );
+    }
 
+    return remainingcards;
 }
 
-Main();
-
+function setupClickHandlers()
+{
+/*  
+    document.getElementById("deal").onclick = function() { buttonClicked("deal") };
+    document.getElementById("fold").onclick = function() { buttonClicked("fold") };
+*/
+    document.getElementById("card0").onclick = function() { cardClicked("card0") };
+    document.getElementById("card1").onclick = function() { cardClicked("card1") };
+    document.getElementById("card2").onclick = function() { cardClicked("card2") };
+    document.getElementById("card3").onclick = function() { cardClicked("card3") };
+    document.getElementById("card4").onclick = function() { cardClicked("card4") };
+}
 
 function cardClicked(str)
 {
-    console.log(str);
+    element = document.getElementById(str)
+    let keepattr = element.getAttribute("class");
+    if( keepattr === null )
+    {
+        element.setAttribute("class", "folded"); 
+    }
+    else if( keepattr === "folded")
+    {
+        element.removeAttribute("class");
+    }
+
+    console.log(element);
+}
+
+function gameStateMachine()
+{
+    if( gameState.gameRound === 0 )
+    {
+        gameState.savedcards = FirstRound();
+        gameState.gameRound = 1;
+    }
+    else if( gameState.gameRound === 1 )
+    {
+        console.log("2nd round")        
+        gameState.savedcards = SecondRound(gameState.savedcards);
+        gameState.gameRound = 2;
+    }
+    else if( gameState.gameRound === 2 )
+    {
+        console.log("3rd/Last round") 
+        gameState.savedcards = LastRound(gameState.savedcards);
+        gameState.gameRound = 3;       
+
+        showUserInfo("Press fold to start another run!");
+
+        // Tell user it's over, and disable deal button 
+    }  
+    else  
+    {
+        // tell user to fold cards
+        location.href = location.href;        
+    }
 }
 
 function buttonClicked(str) {
     console.log(str);
-    if(str==="fold")
+    if( str==="fold" )
     {
         // quick and dirty
         location.href = location.href;
     }
+    else if( str==="deal" ) 
+    {
+        gameStateMachine();  
+    }
+    
 }
 
-document.getElementById("deal").onclick = function() { buttonClicked("deal") };
-document.getElementById("fold").onclick = function() { buttonClicked("fold") };
-document.getElementById("card0").onclick = function() { cardClicked("card0") };
-document.getElementById("card1").onclick = function() { cardClicked("card1") };
-document.getElementById("card2").onclick = function() { cardClicked("card2") };
-document.getElementById("card3").onclick = function() { cardClicked("card3") };
-document.getElementById("card4").onclick = function() { cardClicked("card4") };
+setupClickHandlers();
 
+
+console.log("end setup click");
+
+// TODO 
+/** disable changing status on cards face down */
+/** disable DEAL button when 3rd round is over */
+/** no folded card => pressing on deal should not work 
+ * change the buttons 
+ */

@@ -9,12 +9,8 @@
   
   <body class="poker-table" id="main_body">
 
-    <!-- <button id="deal" onclick="buttonClick('deal')"/>NEW CARDS</button>
-    <button id="deal2"/>FOLD</button>
-    <button id="deal3"/>IDK</button> -->
-
-    <h1>&nbsp;-- video poker --</h1>
-    <h3>&nbsp; hello, let's play!</h3><p></p>
+    <h1>-- Video Poker --</h1>
+    <h3 id="userinfo">Click on DEAL to start!</h3><p></p>
 
 
     <img id="card0" src="cards/B1">
@@ -23,8 +19,11 @@
     <img id="card3" src="cards/B1"/>
     <img id="card4" src="cards/B1"/>
     <p></p>
-    <button id="deal"/>DEAL</button>
-    <button id="fold"/>FOLD</button> 
+
+    <h2 id="message">LET'S GO!</h2>
+
+    <button id="deal" onclick="buttonClicked('deal')"/>DEAL</button>
+    <button id="fold" onclick="buttonClicked('fold')"/>FOLD</button> 
     <p></p>
 
     <script src="poker.js"></script> 
