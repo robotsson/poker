@@ -254,15 +254,17 @@ function showHand(sortedhand)
 // let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
 // sorted = [0,4,8,12,16];
 
-    result += '<img id="card0" src="cards/' + deck[ sortedhand[0] ] + '"/>';
-    result += '<img id="card1" src="cards/' + deck[ sortedhand[1] ] + '"/>';
-    result += '<img id="card2" src="cards/' + deck[ sortedhand[2] ] + '"/>';
-    result += '<img id="card3" src="cards/' + deck[ sortedhand[3] ] + '"/>';
-    result += '<img id="card4" src="cards/' + deck[ sortedhand[4] ] + '"/>';
-    result += '</p>';
-
-    document.getElementById("main_body").innerHTML += result;
-
+    const card0 = '<img id="card0" src="cards/' + deck[ sortedhand[0] ] + '"/>';
+    const card1 = '<img id="card1" src="cards/' + deck[ sortedhand[1] ] + '"/>';
+    const card2 = '<img id="card2" src="cards/' + deck[ sortedhand[2] ] + '"/>';
+    const card3 = '<img id="card3" src="cards/' + deck[ sortedhand[3] ] + '"/>';
+    const card4 = '<img id="card4" src="cards/' + deck[ sortedhand[4] ] + '"/>';
+    
+    document.getElementById("card0").setAttribute("src", "cards/" + deck[ sortedhand[0] ]);
+    document.getElementById("card1").setAttribute("src", "cards/" + deck[ sortedhand[1] ]);
+    document.getElementById("card2").setAttribute("src", "cards/" + deck[ sortedhand[2] ]);
+    document.getElementById("card3").setAttribute("src", "cards/" + deck[ sortedhand[3] ]);
+    document.getElementById("card4").setAttribute("src", "cards/" + deck[ sortedhand[4] ]);
 }
 
 function showResult(handstr)
