@@ -15,6 +15,9 @@ Using hand detection algorithm described in natural language on ["Nick's blog"](
 
 ### TODO
 
-- Make it a real game with betting, folding, discard, etc. I think I should make it a React project before moving on to that.
-
 - Sound effects for winning hands, game page load, game start.
+- Code cleanup & structuring
+- It's possible to fold cards that are face down in first state
+- Cleaner restart of a run
+- No folds, can still press deal
+- Betting logic
