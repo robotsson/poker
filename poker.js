@@ -16,10 +16,10 @@ const deck = [
 ];
 
 
+
 function getRandomInt( max ) {
     return Math.floor(Math.random() * max);
 }
-
 /*
    used to return a set of 5 unique numbers
    between 0 and 51
@@ -247,61 +247,116 @@ function findhands( hand )
     return "";
 }
 
-let hand = Array.from( getRandomSet( 5, 52 ) );
-
-let fusk1 = [0,1,2,3,4];
-let fusk2 = [0,1,2,4,5];
-let fusk3 = [1,4,8,12,16];
-
-// hand = fusk3;
-let sortedhand = hand.sort(compare);
-
-let handstr = findhands( sortedhand );
-
-// special case for A5432, "wheel", looks nicer to put 
-// A last in the displayed hand
-if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+function showHand(sortedhand)
 {
-    //console.log("test for wheel");
-    if( getrank( sortedhand[1] ) === "5" ) 
-    {
-        // re-sort, p
-        //console.log("re-sort");
-        let shifted = sortedhand.shift();
-        sortedhand.push(shifted);
-    }
-}
+    let result = '';
 
-// console.log("card: "+card);
-// console.log( hand );
-
-let result = '';
-
-result += '<h1>&nbsp;-- poker hello. --</h1>';
-result += '<h3>&nbsp; press reload for new hand.</h3><br>';
 // let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
 // sorted = [0,4,8,12,16];
 
-result += '<img src="cards/' + deck[ sortedhand[0] ] + '"/>';
-result += '<img src="cards/' + deck[ sortedhand[1] ] + '"/>';
-result += '<img src="cards/' + deck[ sortedhand[2] ] + '"/>';
-result += '<img src="cards/' + deck[ sortedhand[3] ] + '"/>';
-result += '<img src="cards/' + deck[ sortedhand[4] ] + '"/>';
-result += '</p>';
+    result += '<img id="card0" src="cards/' + deck[ sortedhand[0] ] + '"/>';
+    result += '<img id="card1" src="cards/' + deck[ sortedhand[1] ] + '"/>';
+    result += '<img id="card2" src="cards/' + deck[ sortedhand[2] ] + '"/>';
+    result += '<img id="card3" src="cards/' + deck[ sortedhand[3] ] + '"/>';
+    result += '<img id="card4" src="cards/' + deck[ sortedhand[4] ] + '"/>';
+    result += '</p>';
 
-result += '<h2>';
-if( handstr !== "")
-{
-    result += '-- '+handstr+' --';   
+    document.getElementById("main_body").innerHTML += result;
+
 }
-else
+
+function showResult(handstr)
 {
-    result += '&nbsp;'
+    result = '';
+    result += '<h2>';
+    if( handstr !== "")
+    {
+        result += '-- '+handstr+' --';   
+    }
+    else
+    {
+        result += '&nbsp;'
+    }
+    result += '</h2>';
+
+    document.getElementById("main_body").innerHTML += result;
+
 }
-result += '</h2>';
 
-// console.log(result);
+/** MAIN CODE ENTRY POINT  */
 
-document.getElementById("main_body").innerHTML = result;
 
+function Main()
+{
+    let hand = Array.from( getRandomSet( 5, 52 ) );
+
+    let fusk1 = [0,1,2,3,4];
+    let fusk2 = [0,1,2,4,5];
+    let fusk3 = [1,4,8,12,16];
+
+// hand = fusk3;
+    let sortedhand = hand.sort(compare);
+
+    let handstr = findhands( sortedhand );
+
+
+// special case for A5432, "wheel", looks nicer to put 
+// A last in the displayed hand
+    if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+    {
+        //console.log("test for wheel");
+        if( getrank( sortedhand[1] ) === "5" ) 
+        {
+        // re-sort, p
+        //console.log("re-sort");
+            let shifted = sortedhand.shift();
+            sortedhand.push(shifted);
+        }
+    }
+
+    console.log("showhand");
+    
+    showHand(sortedhand);
+
+    // console.log("card: "+card);
+    // console.log( hand );
+
+    showResult(handstr);
+
+    let remainingcards = [];
+    deck.map( x => remainingcards.push(x) ); // deep copy
+
+    // create a deck with the dealed cards removed
+    remainingcards.splice( sortedhand[0], 1 );
+    remainingcards.splice( sortedhand[1], 1 );
+    remainingcards.splice( sortedhand[2], 1 );
+    remainingcards.splice( sortedhand[3], 1 );
+    remainingcards.splice( sortedhand[4], 1 );
+
+}
+
+Main();
+
+
+function cardClicked(str)
+{
+    console.log(str);
+}
+
+function buttonClicked(str) {
+    console.log(str);
+    if(str==="fold")
+    {
+        // quick and dirty
+        location.href = location.href;
+    }
+}
+
+document.getElementById("deal").onclick = function() { buttonClicked("deal") };
+document.getElementById("fold").onclick = function() { buttonClicked("fold") };
+document.getElementById("card0").onclick = function() { cardClicked("card0") };
+document.getElementById("card1").onclick = function() { cardClicked("card1") };
+document.getElementById("card2").onclick = function() { cardClicked("card2") };
+document.getElementById("card3").onclick = function() { cardClicked("card3") };
+document.getElementById("card4").onclick = function() { cardClicked("card4") };
 

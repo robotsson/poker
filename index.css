@@ -69,6 +69,7 @@ body {
 }
 
 img {
+    margin-top: 16px;
     margin-left: 8px;
     margin-right: 8px;
     box-shadow: 0px 0px 128px 16px rgba(45, 255, 196, 0.3);
@@ -78,12 +79,40 @@ img {
 img:hover {
     /* filter: hue-rotate(90deg); */
     filter: contrast(200%);
-    transform: translateY(-8px);
+    transform: translateY(-12px);
+}
+
+button {
+    font-family: "Pixelify Sans", sans-serif;
+    font-weight: 500;
+    font-size: 32px;
+    background-color: rgba(255, 125, 180, 1.0);
+    width: fit-content;
+    margin-bottom: 20px;
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-top: 2px;
+    padding-bottom: 2px;
+    border-radius: 5px;
+    margin-left: 10px;
+    margin-right: 10px;
+    transition-duration: 0.2s;
+    box-shadow: 2px 2px black;
+    border-style: solid;
+    color: white;
+}
+
+button:hover
+{
+    filter: contrast(200%);
+    background-color: purple;
 }
 
 .poker-table {
     background-color: green;
 }
+
+
 
 .linkbox {
     background-color: rgba(255, 125, 180, 1.0);
@@ -99,8 +128,13 @@ img:hover {
     margin-right: 25px;
     transition-duration: 0.2s;
     box-shadow: 2px 2px black;
+    border-style: solid;
+    border-width: 2px;
+    border-color: black;
+
 }
 
 .linkbox:hover {
-    background-color: rgba(255, 105, 180, 1.0);
+    background-color: purple;
+    transform: translateY(4px);
 }
