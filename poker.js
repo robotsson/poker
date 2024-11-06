@@ -32,8 +32,8 @@ function getRandomInt( max ) {
 */
 let getRandomSet = function( count, max )
 {
-    console.log("getrandomset");
-    console.log(max);
+    // console.log("getrandomset");
+    // console.log(max);
 
     let numbers = new Set();
 
@@ -201,7 +201,7 @@ function findHands( hand )
     console.table( [...histogram] );
 
 
-    console.log("hl: "+histogram.size);
+    // console.log("hl: "+histogram.size);
     let values = [...histogram.values()];
 
     let flush =  isFlush( hand );
@@ -352,7 +352,7 @@ function FirstRound()
 
     showUserInfo("Round 1: Click on cards you want to discard!");
 
-    console.log("end first round");
+    // console.log("end first round");
 
     return sortedHand;
 
@@ -367,8 +367,8 @@ function SecondRound( currentHand )
     keepCards = currentHand.filter( foldedCards );
     resetFoldedCards();
 
-    console.log("keepcards");
-    console.log(keepCards);
+    // console.log("keepcards");
+    // console.log(keepCards);
 
     let newCardIndices = Array.from( getRandomSet( 5-keepCards.length, gameState.remainingCards.size ) );
    
@@ -413,8 +413,8 @@ function FinalHand( currentHand )
     keepCards = currentHand.filter( foldedCards );
     resetFoldedCards();
 
-    console.log("keepcards");
-    console.log(keepCards);
+    //console.log("keepcards");
+    //console.log(keepCards);
 
     let newCardIndices = Array.from( getRandomSet( 5-keepCards.length, gameState.remainingCards.size ) );
    
@@ -486,7 +486,15 @@ function setupClickHandlers()
 
 function cardClicked(str)
 {
+    // console.log("cardClicked");
+    // console.log( gameState.gameRound );
+
+    if( gameState.gameRound === 3 ) return;
+
     element = document.getElementById(str)
+
+    if ( element.getAttribute("src") === "cards/B1") return;
+
     let keepattr = element.getAttribute("class");
     if( keepattr === null )
     {
@@ -497,8 +505,8 @@ function cardClicked(str)
         element.removeAttribute("class");
     }
 
-    
-    console.log(element);
+ 
+    // console.log(element);
 }
 
 function gameStateMachine()
@@ -508,7 +516,7 @@ function gameStateMachine()
     {
         gameState.currentHand = FirstRound();
         gameState.currentHand.forEach( card => gameState.remainingCards.delete( card ) );
-        console.log( gameState.remainingCards.size ); // 47 
+        // console.log( gameState.remainingCards.size ); // 47 
         gameState.gameRound = 1;
     }
     else if( gameState.gameRound === 1 )
@@ -530,7 +538,7 @@ function gameStateMachine()
 }
 
 function buttonClicked(str) {
-    console.log(str);
+    // console.log(str);
     if( str==="fold" )
     {
         // quick and dirty
@@ -546,10 +554,9 @@ function buttonClicked(str) {
 setupClickHandlers();
 
 
-console.log("end setup click");
+// console.log("end setup click");
 
 // TODO 
-/** disable changing status on cards face down */
 /** disable DEAL button when 3rd round is over */
 /** no folded card => pressing on deal should not work 
  * change the buttons 
