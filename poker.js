@@ -18,9 +18,9 @@ const deck = [
 // game state Object
 // 0 = no hands dealt, 1 = one hand, etc.
 let gameState = { 
-    "gameRound": 0, 
-    "savedcards": [],
-    "remainingcards": []
+    "gameRound": 0,
+    "currentHand": [],
+    "remainingCards": new Set(deck)
 }
 
 function getRandomInt( max ) {
@@ -32,6 +32,9 @@ function getRandomInt( max ) {
 */
 let getRandomSet = function( count, max )
 {
+    console.log("getrandomset");
+    console.log(max);
+
     let numbers = new Set();
 
     while( numbers.size < count )
@@ -43,9 +46,9 @@ let getRandomSet = function( count, max )
 };
 
 /* remove the last character in card string (i.e "5S", "10C" .. ) to get rank */
-function getrank( card )
+function getRank( card )
 {
-  return deck[card].slice( 0, -1 );
+  return card.substring( 0, card.length-1 );
 }
 
 /* lookup table used to decide if a card is higher than another */
@@ -53,29 +56,32 @@ const rank = ["A","K","Q","J","10","9","8","7","6","5","4","3","2"];
 
 
 /* compare two card deck entries */
-function compare( a, b )
+function compareCards( a, b )
 {
-    // deck[a] and deck[b] contains
+    // console.log("compare");
+    // console.log(a);
+    // console.log(b);
+    // a and b contains
     // a string made up of rank followed by suit (S,C,H,D) 
     // removing suit to compare it by looking up the position
     // of the card's rank in the rank array 
-    let ar = getrank(a ); 
-    let br = getrank( b);
+    let ar = getRank(a ); 
+    let br = getRank( b);
 
     return rank.indexOf(ar)-rank.indexOf(br);
 }
 
 /* last character in card is the suit/color */
-function getsuit( card )
+function getSuit( card )
 {
     // last character in string
-    return deck[card].at(-1);
+    return card.at(-1);
 }
 
 /* a sorted histogram is returned from the hand */
-function getsortedhistogram( hand )
+function getSortedHistogram( hand )
 {
-    let cardranks = hand.map( getrank );
+    let cardRanks = hand.map( getRank );
     //console.log( cardranks );
     let histogram = new Map();
 
@@ -93,11 +99,11 @@ function getsortedhistogram( hand )
     // }
 
     // rewritten by Claude.ai
-    for ( let card of cardranks ) 
+    for ( let card of cardRanks ) 
     {
         if ( ! histogram.has(card) ) 
         {
-            const frequency = cardranks.filter( x => x === card ).length;
+            const frequency = cardRanks.filter( x => x === card ).length;
             histogram.set( card, frequency );
         }
     }
@@ -109,19 +115,19 @@ function getsortedhistogram( hand )
     //                        .sort( ( [ , a_v], [ , b_v] ) => b_v - a_v ));
 
     // rewritten by Claude.ai
-    let sortedhistogram = new Map(
+    let sortedHistogram = new Map(
         Array.from( histogram ).sort( ( a, b ) => b[1] - a[1] )
     );
                             
-    return( sortedhistogram );
+    return( sortedHistogram );
 }
 
 /* detects if the hand is a straight, see explanation of the
    algorithm in findhands() */
-function is_straight( hand )
+function isStraight( hand )
 {
-    let first = getrank( hand[0] );
-    let last = getrank( hand[4] );
+    let first = getRank( hand[0] );
+    let last = getRank( hand[4] );
     
     // rank array A,K,...,5,4,3,2
     // A has index 0, 2 has index 13
@@ -135,7 +141,7 @@ function is_straight( hand )
     else if( first === "A" )
     {
         // Check for "wheel"
-        let second = getrank( hand[1] );
+        let second = getRank( hand[1] );
         if( second === "5" )
         {
             let secondint = 13 - rank.indexOf(second);
@@ -151,16 +157,16 @@ function is_straight( hand )
 }
 
 /* detects if all the cards have the same suit / color */
-function is_flush( hand )
+function isFlush( hand )
 {
-    let a = hand.map( getsuit );
+    let a = hand.map( getSuit );
     // console.log(a);
     return ( a[0] == a[1] ) && ( a[1] == a[2] ) 
         && ( a[2] == a[3] ) && ( a[3] == a[4] );
 }
 
 /* detects winning hands and returns the enthusiastic name for it */
-function findhands( hand )
+function findHands( hand )
 {
     // console.log("findhands");
     /*   
@@ -190,7 +196,7 @@ function findhands( hand )
         the difference between it and the lowest card is 3.   
     */
 
-    let histogram = getsortedhistogram( hand );
+    let histogram = getSortedHistogram( hand );
 
     console.table( [...histogram] );
 
@@ -198,7 +204,7 @@ function findhands( hand )
     console.log("hl: "+histogram.size);
     let values = [...histogram.values()];
 
-    let flush =  is_flush( hand );
+    let flush =  isFlush( hand );
 
     if( histogram.size === 2 )
     {  
@@ -233,12 +239,12 @@ function findhands( hand )
             return "PAIR!";
         }
     }
-    else if( is_straight( hand ) )
+    else if( isStraight( hand ) )
     {
         // "Broadway"(AKQJ10) & "Wheel" (A5432)
-        if( flush && getrank(hand[0]) === "A" ) 
+        if( flush && getRank(hand[0]) === "A" ) 
         {
-            if( getrank(hand[1]) === "K" )
+            if( getRank(hand[1]) === "K" )
             {
                 return "ROYAL FLUSH!";
             }
@@ -257,20 +263,17 @@ function showHand(sortedhand)
 {
     let result = '';
 
-// let fusk = [4,8,12,16,0]; // 2C,3C,4C,5C,AC
-// sorted = [0,4,8,12,16];
-
-    const card0 = '<img id="card0" src="cards/' + deck[ sortedhand[0] ] + '"/>';
-    const card1 = '<img id="card1" src="cards/' + deck[ sortedhand[1] ] + '"/>';
-    const card2 = '<img id="card2" src="cards/' + deck[ sortedhand[2] ] + '"/>';
-    const card3 = '<img id="card3" src="cards/' + deck[ sortedhand[3] ] + '"/>';
-    const card4 = '<img id="card4" src="cards/' + deck[ sortedhand[4] ] + '"/>';
+    const card0 = '<img id="card0" src="cards/' + sortedhand[0] + '"/>';
+    const card1 = '<img id="card1" src="cards/' + sortedhand[1] + '"/>';
+    const card2 = '<img id="card2" src="cards/' + sortedhand[2] + '"/>';
+    const card3 = '<img id="card3" src="cards/' + sortedhand[3] + '"/>';
+    const card4 = '<img id="card4" src="cards/' + sortedhand[4] + '"/>';
     
-    document.getElementById("card0").setAttribute("src", "cards/" + deck[ sortedhand[0] ]);
-    document.getElementById("card1").setAttribute("src", "cards/" + deck[ sortedhand[1] ]);
-    document.getElementById("card2").setAttribute("src", "cards/" + deck[ sortedhand[2] ]);
-    document.getElementById("card3").setAttribute("src", "cards/" + deck[ sortedhand[3] ]);
-    document.getElementById("card4").setAttribute("src", "cards/" + deck[ sortedhand[4] ]);
+    document.getElementById("card0").setAttribute("src", "cards/" + sortedhand[0] );
+    document.getElementById("card1").setAttribute("src", "cards/" + sortedhand[1] );
+    document.getElementById("card2").setAttribute("src", "cards/" + sortedhand[2] );
+    document.getElementById("card3").setAttribute("src", "cards/" + sortedhand[3] );
+    document.getElementById("card4").setAttribute("src", "cards/" + sortedhand[4] );
 
     setupClickHandlers();
 }
@@ -293,18 +296,24 @@ function showResult(handstr)
 
 }
 
-function getSortedHand()
+function getFirstHand()
 {   
-    let hand = Array.from( getRandomSet( 5, 52 ) );
+    let handIndices = Array.from( getRandomSet( 5, 52 ) );
 
-    let fusk1 = [0,1,2,3,4];
-    let fusk2 = [0,1,2,4,5];
-    let fusk3 = [1,4,8,12,16];
+    // let fusk1 = [0,1,2,3,4];
+    // let fusk2 = [0,1,2,4,5];
+    // let fusk3 = [1,4,8,12,16];
+
+    // create a hand, an array of five string out of the indices
+    let hand = handIndices.map( index => deck[index] );
+
+    console.log("getFirstHand");
+    console.log(hand);
 
     // hand = fusk3;
-    let sortedhand = hand.sort(compare);
+    let sortedHand = hand.sort(compareCards);
 
-    return sortedhand;
+    return sortedHand;
 }
 
 function showUserInfo(str)
@@ -314,43 +323,134 @@ function showUserInfo(str)
 
 function FirstRound()
 {
+    let sortedHand = getFirstHand();
 
-    let sortedhand = getSortedHand();
-
-    let handstr = findhands( sortedhand );
+    let handStr = findHands( sortedHand );
 
     // special case for A5432, "wheel", looks nicer to put 
     // A last in the displayed hand
-    if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+    if( handStr === "STRAIGHT!" || handStr === "STRAIGHT FLUSH!" )
     {
         //console.log("test for wheel");
-        if( getrank( sortedhand[1] ) === "5" ) 
+        if( getRank( sortedHand[1] ) === "5" ) 
         {
         // re-sort, p
         //console.log("re-sort");
-            let shifted = sortedhand.shift();
-            sortedhand.push(shifted);
+            let shifted = sortedHand.shift();
+            sortedHand.push(shifted);
         }
     }
 
     // console.log("showhand");
     
-    showHand(sortedhand);
+    showHand(sortedHand);
 
     // console.log("card: "+card);
     // console.log( hand );
 
-    showResult(handstr);
+    showResult(handStr);
 
     showUserInfo("Round 1: Click on cards you want to discard!");
 
-    console.log("end first deal");
+    console.log("end first round");
 
-    return sortedhand;
+    return sortedHand;
+
 }  // End First Deal
 
 
-function filterOutFoldedCards( card, index )
+function SecondRound( currentHand )
+{
+    console.log("2nd round begin");
+    console.log(currentHand);
+
+    keepCards = currentHand.filter( foldedCards );
+    resetFoldedCards();
+
+    console.log("keepcards");
+    console.log(keepCards);
+
+    let newCardIndices = Array.from( getRandomSet( 5-keepCards.length, gameState.remainingCards.size ) );
+   
+    const arrayFromSet = [...gameState.remainingCards];
+
+    let newCards = newCardIndices.map( index => arrayFromSet[index] );
+    newCards.forEach( card => gameState.remainingCards.delete(card) );
+
+    newHand = keepCards.concat( newCards );
+    newSortedHand = newHand.sort( compareCards );
+
+    showHand( newSortedHand );
+
+    let handStr = findHands( newSortedHand );
+
+    // special case for A5432, "wheel", looks nicer to put 
+    // A last in the displayed hand
+    if( handStr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+    {
+        //console.log("test for wheel");
+        if( getRank( newSortedHand[1] ) === "5" ) 
+        {
+        // re-sort, p
+        //console.log("re-sort");
+            let shifted = newSortedHand.shift();
+            newSortedHand.push(shifted);
+        }
+    }
+
+    showResult(handStr);  
+
+    showUserInfo("Round 2: Click on cards you want to discard!");
+    
+    return newSortedHand;
+}
+
+function FinalHand( currentHand )
+{
+    console.log("final hand begin");
+    console.log(currentHand); 
+
+    keepCards = currentHand.filter( foldedCards );
+    resetFoldedCards();
+
+    console.log("keepcards");
+    console.log(keepCards);
+
+    let newCardIndices = Array.from( getRandomSet( 5-keepCards.length, gameState.remainingCards.size ) );
+   
+    const arrayFromSet = [...gameState.remainingCards];
+
+    let newCards = newCardIndices.map( index => arrayFromSet[index] );
+    // newCards.forEach( card => gameState.remainingCards.delete(card) );
+
+    newHand = keepCards.concat( newCards );
+    newSortedHand = newHand.sort( compareCards );
+
+    showHand( newSortedHand );
+
+    let handStr = findHands( newSortedHand );
+
+    // special case for A5432, "wheel", looks nicer to put 
+    // A last in the displayed hand
+    if( handStr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
+    {
+        //console.log("test for wheel");
+        if( getRank( newSortedHand[1] ) === "5" ) 
+        {
+        // re-sort, p
+        //console.log("re-sort");
+            let shifted = newSortedHand.shift();
+            newSortedHand.push(shifted);
+        }
+    }
+
+    showResult(handStr);  
+
+    showUserInfo("Press deal or fold to start another run!");
+
+}
+
+function foldedCards( card, index )
 {
     element = document.getElementById("card"+index);
     if( element.getAttribute("class") === "folded")
@@ -369,123 +469,7 @@ function resetFoldedCards( )
     }
 }
 
-function SecondRound(savedcards)
-{
 
-    gameState.remainingcards = createNewDeck( savedcards );
-    keptcards = savedcards.filter( filterOutFoldedCards );
-    resetFoldedCards();
-    console.log("Second round");
-    console.log(keptcards);
-
-    let newcards = Array.from( getRandomSet( 5-keptcards.length, gameState.remainingcards.length ) );
-    
-    // convert between the new array and old array of cards, indices in the full deck are used
-    let cardstrings = newcards.map( card => gameState.remainingcards[card] );
-    let newcardsconverted = cardstrings.map( cardstring => deck.indexOf( cardstring ));
-
-    let newhand = keptcards.concat( newcardsconverted );
-    let newsortedhand = newhand.sort(compare);
-
-    
-
-    showHand( newsortedhand );
-
-    let handstr = findhands( newsortedhand );
-
-    // special case for A5432, "wheel", looks nicer to put 
-    // A last in the displayed hand
-    if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
-    {
-        //console.log("test for wheel");
-        if( getrank( newsortedhand[1] ) === "5" ) 
-        {
-        // re-sort, p
-        //console.log("re-sort");
-            let shifted = newsortedhand.shift();
-            newsortedhand.push(shifted);
-        }
-    }
-
-    showResult(handstr);
-
-    showUserInfo("Round 2: Click on cards you want to discard!");
-
-    console.log(cardstrings);
-
-    gameState.remainingcards = createNewDeck( newcards ); 
-    
-    return newsortedhand;
-    
-}
-
-
-function LastRound(savedcards)
-{
-
-    gameState.remainingcards = createNewDeck( savedcards );
-    keptcards = savedcards.filter( filterOutFoldedCards );
-    resetFoldedCards();
-    console.log("Second round");
-    console.log(keptcards);
-
-    let newcards = Array.from( getRandomSet( 5-keptcards.length, gameState.remainingcards.length ) );
-    
-    // convert between the new array and old array of cards, indices in the full deck are used
-    let cardstrings = newcards.map( card => gameState.remainingcards[card] );
-    let newcardsconverted = cardstrings.map( cardstring => deck.indexOf( cardstring ));
-
-    let newhand = keptcards.concat( newcardsconverted );
-    let newsortedhand = newhand.sort(compare);
-
-    
-
-    showHand( newsortedhand );
-
-    let handstr = findhands( newsortedhand );
-
-    // special case for A5432, "wheel", looks nicer to put 
-    // A last in the displayed hand
-    if( handstr === "STRAIGHT!" || handstr === "STRAIGHT FLUSH!" )
-    {
-        //console.log("test for wheel");
-        if( getrank( newsortedhand[1] ) === "5" ) 
-        {
-        // re-sort, p
-        //console.log("re-sort");
-            let shifted = newsortedhand.shift();
-            newsortedhand.push(shifted);
-        }
-    }
-
-    showResult(handstr);
-
-    showUserInfo("Last round, press fold to restart!");
-
-    console.log(cardstrings);
-
-    gameState.remainingcards = createNewDeck( newcards ); 
-    
-    return newsortedhand;
-    
-}
-
-
-
-
-function createNewDeck( sortedhand )
-{
-    let remainingcards = [];
-    deck.map( x => remainingcards.push(x) ); // deep copy
-
-    // create a deck with the dealed cards removed'
-    for( let card in sortedhand )
-    {
-        remainingcards.splice( card, 1 );
-    }
-
-    return remainingcards;
-}
 
 function setupClickHandlers()
 {
@@ -513,35 +497,34 @@ function cardClicked(str)
         element.removeAttribute("class");
     }
 
+    
     console.log(element);
 }
 
 function gameStateMachine()
 {
+
     if( gameState.gameRound === 0 )
     {
-        gameState.savedcards = FirstRound();
+        gameState.currentHand = FirstRound();
+        gameState.currentHand.forEach( card => gameState.remainingCards.delete( card ) );
+        console.log( gameState.remainingCards.size ); // 47 
         gameState.gameRound = 1;
     }
     else if( gameState.gameRound === 1 )
     {
-        console.log("2nd round")        
-        gameState.savedcards = SecondRound(gameState.savedcards);
+        gameState.currentHand = SecondRound( gameState.currentHand );
         gameState.gameRound = 2;
     }
     else if( gameState.gameRound === 2 )
     {
-        console.log("3rd/Last round") 
-        gameState.savedcards = LastRound(gameState.savedcards);
-        gameState.gameRound = 3;       
+        FinalHand( gameState.currentHand );
+        // console.log("Nothing here");
+        gameState.gameRound = 3;
 
-        showUserInfo("Press fold to start another run!");
-
-        // Tell user it's over, and disable deal button 
     }  
     else  
     {
-        // tell user to fold cards
         location.href = location.href;        
     }
 }
